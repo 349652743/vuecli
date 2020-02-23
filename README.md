@@ -1,24 +1,6 @@
-# vuecli
+## 基于vuecli的用户报名及后台管理Web
+后台增删改查用户
 
-## Project setup
-```
-npm install
-```
+后台增删改查比赛
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+用户界面可根据比赛状态改为查询用户账号密码或注册比赛
