@@ -25,28 +25,27 @@
         </el-col>
     </el-row>
     <br>
+    <!-- 表单 -->
     <el-row type="flex" class="row-bg" justify="center" :gutter="20">
-          
-            <el-col :span="6">
-                <label>学号：</label>
-                <el-input v-model="user.studentId" placeholder="请输入账号"></el-input>
-                </el-col>
-                <el-col :span="6">
-            <label>姓名：</label>
-                <el-input v-model="user.name" placeholder="请输入账号"></el-input>
-            </el-col>
-            <el-col :span="6">
-                <label>性别：</label>
-                <el-select v-model="user.sex" placeholder="请选择" style="width:100%;">
-                    <el-option
-                    v-for="item in sexOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-          
+      <el-col :span="6">
+          <label>学号：</label>
+          <el-input v-model="user.studentId" placeholder="请输入账号"></el-input>
+      </el-col>
+      <el-col :span="6">
+          <label>姓名：</label>
+          <el-input v-model="user.name" placeholder="请输入账号"></el-input>
+      </el-col>
+      <el-col :span="6">
+          <label>性别：</label>
+          <el-select v-model="user.sex" placeholder="请选择" style="width:100%;">
+              <el-option
+              v-for="item in sexOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+              </el-option>
+          </el-select>
+      </el-col>
     </el-row>
     <br>
     <el-row type="flex" class="row-bg" justify="center">
@@ -61,8 +60,8 @@
                 </el-option>
             </el-select>
       </el-col>
-        
     </el-row>
+
     <br>
     <el-row type="flex" class="row-bg " justify="center">
         <el-col :span="20">
@@ -123,10 +122,10 @@ export default {
           label: '人工智能学院'
         }],
         user:{
-            name:'王宁',
-            sex:'男',
-            studentId:1,
-            department:'计算机科学技术学院',
+            name:'',
+            sex:'',
+            studentId:'',
+            department:'',
             username:'',
             password:'',
             haveQueried:true,
@@ -142,10 +141,9 @@ export default {
     this.$http.post('http://127.0.0.1:3000/api/queryContest',data,{emulateJSON:true}).then(function(res){
       console.log(res.body.status);
       if(res.body.status===200){
-          if(res.body.contest.openRegister==true){
-            _this.openquery=false;
-          }else _this.openquery=true;
-
+        if(res.body.contest.openRegister==true){
+          _this.openquery=false;
+        }else _this.openquery=true;
       }
     },function(res){
         console.log(res.status);
@@ -153,18 +151,23 @@ export default {
   },
   methods:{
     submit:function(){
-      var data = {user:this.user};
-      this.$http.post('http://127.0.0.1:3000/api/addUser',data,{emulateJSON:true}).then(function(res){
-        console.log(res.body.status);
-        if(res.body.status===200){
-            this.$message("注册成功");
-        }
-      },function(res){
-          console.log(res.status);
-      });
-        //ajax 注册用户
+    //ajax 注册用户
+      if(this.user.name!=''&&this.user.sex!=''&&this.user.department!=''&&this.user.studentId!=''){//表单验证
+        var data = {user:this.user};
+        this.$http.post('http://127.0.0.1:3000/api/addUser',data,{emulateJSON:true}).then(function(res){
+          console.log(res.body.status);
+          if(res.body.status===200){
+            this.$message({message:"注册成功",type:'success'});
+          }else {
+            this.$message.error(res.body.message);
+          }
+        },function(res){
+            console.log(res.status);
+        });
+      }else this.$message({message:"请填写完整信息",type:'warning'});
     },
     query:function(){
+      //ajax 查询用户
       var data = {user:this.user};
       this.$http.post('http://127.0.0.1:3000/api/queryUser',data,{emulateJSON:true}).then(function(res){
         console.log(res.body.status);
@@ -176,9 +179,6 @@ export default {
       },function(res){
           console.log(res.status);
       });
-
-
-      //ajax 查询用户
     }
   }
 }
