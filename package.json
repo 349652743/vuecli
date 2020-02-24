@@ -13,7 +13,10 @@
     "vue-router": "^3.1.5",
     "element-ui": "^2.13.0",
     "vuex": "^3.1.2",
-    "vue-resource":"^1.5.1"
+    "vue-resource":"^1.5.1",
+    "file-saver":"^2.0.2",
+    "xlsx":"^0.15.5",
+    "script-loader":"^0.7.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",

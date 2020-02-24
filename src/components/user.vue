@@ -16,6 +16,7 @@
         <el-main>
             <el-button type="primary" @click="addDialogVisible=true">添加用户</el-button>
             <el-button type="warning" @click="allocateDialogVisible=true">分配账号</el-button>
+            <el-button type="success" @click="exportExcel">导出表格</el-button>
             <el-table  :data="contestlist[tmpcontest].userlist" style="width: 100%">
                 <el-table-column prop="id" label="编号"  header-align="center" align="center">
                 </el-table-column>
@@ -474,6 +475,21 @@ export default {
                     return 0;
                 }
             }
+        },
+        exportExcel() {//导出到表格
+            require.ensure([], () => {
+                const { export_json_to_excel } = require('../excel/Export2Excel');
+                const tHeader = ['序号','姓名','性别','学号','学院','用户名','密码','座位号'];
+                // 上面设置Excel的表格第一行的标题
+                const filterVal = ['id','name','sex','studentId','department','username','password','seatNumber'];
+                // 上面的index、nickName、name是tableData里对象的属性
+                const list = this.contestlist[this.tmpcontest].userlist;  //把data里的tableData存到list
+                const data = this.formatJson(filterVal, list);
+                export_json_to_excel(tHeader, data, '列表excel');
+            })
+        },
+        formatJson(filterVal, jsonData) {//导出到表格功能依赖
+        return jsonData.map(v => filterVal.map(j => v[j]))
         }
         
 
