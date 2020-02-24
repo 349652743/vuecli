@@ -116,6 +116,7 @@
 </template>
 <script>
     var data = {
+        url:'http://127.0.0.1:3000',
         contestlist:[],
         addDialogVisible:false,
         editDialogVisible:false,
@@ -142,7 +143,7 @@ export default {
     },
     mounted(){
         var data = {token:this.$store.state.token};
-        this.$http.post('http://127.0.0.1:3000/api/getContest',data,{emulateJSON:true}).then(function(res){
+        this.$http.post(this.url+'/api/getContest',data,{emulateJSON:true}).then(function(res){
             console.log(res.body.status);
             if(res.body.status===200){
                 this.contestlist = res.body.contestlist;
@@ -166,7 +167,7 @@ export default {
             //ajax //后台修改比赛
             var data = {contest:this.editingContest,token:this.$store.state.token};
             var _this = this;
-            this.$http.post('http://127.0.0.1:3000/api/editContest',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/editContest',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -198,7 +199,7 @@ export default {
             }
             //ajax 后台删除比赛
             var data = {contest:this.deletingContest,token:this.$store.state.token};
-            this.$http.post('http://127.0.0.1:3000/api/deleteContest',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/deleteContest',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("删除成功");
@@ -213,7 +214,7 @@ export default {
         editStatus(row){
             //ajax 后台修改比赛状态
             var data = {contest:{id:row.id,openRegister:row.openRegister},token:this.$store.state.token};
-            this.$http.post('http://127.0.0.1:3000/api/editContestStatus',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/editContestStatus',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -231,7 +232,7 @@ export default {
             // console.log(this.addingContest.endTime);
             var data = {contest:this.addingContest,token:this.$store.state.token};
             var _this = this;
-            this.$http.post('http://127.0.0.1:3000/api/addContest',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/addContest',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     //前端添加比赛

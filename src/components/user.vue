@@ -217,6 +217,7 @@
         contestlist:[{
             userlist:[]
         }],
+        url:'http://127.0.0.1:3000',
         addDialogVisible:false,
         editDialogVisible:false,
         deleteDialogVisible:false,
@@ -266,7 +267,7 @@ export default {
     },
     mounted(){
         var data = {token:this.$store.state.token};
-        this.$http.post('http://127.0.0.1:3000/api/getUser',data,{emulateJSON:true}).then(function(res){
+        this.$http.post(this.url+'/api/getUser',data,{emulateJSON:true}).then(function(res){
             console.log(res.body.status);
             if(res.body.status===200){
                 this.contestlist = res.body.contestlist;
@@ -300,7 +301,7 @@ export default {
             //ajax //后台修改用户
             var data = {user:this.editingUser,token:this.$store.state.token};
             var _this = this;
-            this.$http.post('http://127.0.0.1:3000/api/editUser',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/editUser',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -335,7 +336,7 @@ export default {
             //ajax 后台删除用户
             console.log(this.deletingUser);
             var data = {user:this.deletingUser,token:this.$store.state.token};
-            this.$http.post('http://127.0.0.1:3000/api/deleteUser',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/deleteUser',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("删除成功");
@@ -350,7 +351,7 @@ export default {
         editstatus(row){
             //ajax 后台修改用户状态
             var data = {user:{id:row.id,haveQueried:row.haveQueried},token:this.$store.state.token};
-            this.$http.post('http://127.0.0.1:3000/api/editUserStatus',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/editUserStatus',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -366,7 +367,7 @@ export default {
             //ajax后台添加用户
             var data = {user:this.addinguser,token:this.$store.state.token};
             var _this = this;
-            this.$http.post('http://127.0.0.1:3000/api/addUser',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
                      console.log(res.body.status);
                     if(res.body.status===200){
                         for(var i=0;i<_this.contestlist.length;i++){
@@ -440,7 +441,7 @@ export default {
                     }
                     //ajax后台修改信息
                     var data = {userlist:_this.contestlist[_this.tmpcontest].userlist,token:_this.$store.state.token};
-                    _this.$http.post('http://127.0.0.1:3000/api/allocateAccount',data,{emulateJSON:true}).then(function(res){
+                    _this.$http.post(_this.url+'/api/allocateAccount',data,{emulateJSON:true}).then(function(res){
                         if(res.body.status===200){
                             this.allocateDialogVisible = false;
                             this.$message({

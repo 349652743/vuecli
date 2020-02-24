@@ -107,38 +107,39 @@ export default {
   name: 'register',
   data(){
     return {
-        sexOptions: [{
-          value: '男',
-          label: '男'
-        }, {
-          value: '女',
-          label: '女'
-        }],
-        departmentOptions: [{
-          value: '计算机科学技术学院',
-          label: '计算机科学技术学院'
-        }, {
-          value: '人工智能学院',
-          label: '人工智能学院'
-        }],
-        user:{
-            name:'',
-            sex:'',
-            studentId:'',
-            department:'',
-            username:'',
-            password:'',
-            haveQueried:true,
-            contestId:this.$route.query.id
-        },
-        dialogVisible:false,
-        openquery:true,
+      url:'http://127.0.0.1:3000',
+      sexOptions: [{
+        value: '男',
+        label: '男'
+      }, {
+        value: '女',
+        label: '女'
+      }],
+      departmentOptions: [{
+        value: '计算机科学技术学院',
+        label: '计算机科学技术学院'
+      }, {
+        value: '人工智能学院',
+        label: '人工智能学院'
+      }],
+      user:{
+          name:'',
+          sex:'',
+          studentId:'',
+          department:'',
+          username:'',
+          password:'',
+          haveQueried:true,
+          contestId:this.$route.query.id
+      },
+      dialogVisible:false,
+      openquery:true,
     }
   },
   mounted(){
     var data = {contest:this.user};
     var _this = this;
-    this.$http.post('http://127.0.0.1:3000/api/queryContest',data,{emulateJSON:true}).then(function(res){
+    this.$http.post(this.url+'/api/queryContest',data,{emulateJSON:true}).then(function(res){
       console.log(res.body.status);
       if(res.body.status===200){
         if(res.body.contest.openRegister==true){
@@ -154,7 +155,7 @@ export default {
     //ajax 注册用户
       if(this.user.name!=''&&this.user.sex!=''&&this.user.department!=''&&this.user.studentId!=''){//表单验证
         var data = {user:this.user};
-        this.$http.post('http://127.0.0.1:3000/api/addUser',data,{emulateJSON:true}).then(function(res){
+        this.$http.post(this.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
           console.log(res.body.status);
           if(res.body.status===200){
             this.$message({message:"注册成功",type:'success'});
@@ -169,7 +170,7 @@ export default {
     query:function(){
       //ajax 查询用户
       var data = {user:this.user};
-      this.$http.post('http://127.0.0.1:3000/api/queryUser',data,{emulateJSON:true}).then(function(res){
+      this.$http.post(this.url+'/api/queryUser',data,{emulateJSON:true}).then(function(res){
         console.log(res.body.status);
         if(res.body.status===200){
             this.$alert(`账号:${res.body.user.username} 密码:${res.body.user.password} 座位号:${res.body.user.seatNumber}`, '请谨慎保存账号密码', {
