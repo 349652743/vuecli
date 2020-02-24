@@ -12,9 +12,9 @@
                         <router-link :to="{ path: '/register', query: { id:scope.row.id ,contestName:scope.row.contestName}}">{{scope.row.contestName}}</router-link>
                     </template>
                 </el-table-column>
-                <el-table-column prop="endTime" label="结束时间" header-align="center" align="center">
+                <el-table-column prop="endTime" label="注册结束时间" header-align="center" align="center">
                 </el-table-column>
-                <el-table-column label="状态" width="180" header-align="center" align="center">
+                <el-table-column label="开放查询状态" width="180" header-align="center" align="center">
                     <template slot-scope="scope">
                         <el-switch
                         v-model="scope.row.openRegister"
@@ -139,7 +139,6 @@ export default {
             console.log(res.body.status);
             if(res.body.status===200){
                 this.contestlist = res.body.contestlist;
-                this.$message("获取比赛成功");
             }else {
                 this.$message("获取比赛失败,请重新登录");
             }

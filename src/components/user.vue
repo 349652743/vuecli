@@ -31,6 +31,8 @@
                 </el-table-column>
                 <el-table-column prop="password" label="密码" header-align="center" align="center">
                 </el-table-column>
+                <el-table-column prop="seatNumber" label="座位号" header-align="center" align="center">
+                </el-table-column>
                 <el-table-column label="已查询" width="180" header-align="center" align="center">
                     <template slot-scope="scope">
                         <el-switch
@@ -92,6 +94,12 @@
                             <el-input v-model="editingUser.password" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <el-row type="flex" class="row-bg" >
+                        <el-col :span="4"><p>座位号: </p></el-col>
+                        <el-col :span="10">
+                            <el-input v-model="editingUser.seatNumber" placeholder="请输入账号"></el-input>
+                        </el-col>
+                    </el-row>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="editDialogVisible = false">取 消</el-button>
                         <el-button type="primary" @click="submituser">确 定</el-button>
@@ -148,6 +156,12 @@
                         </el-col>
                     </el-row>
                     <el-row type="flex" class="row-bg" >
+                        <el-col :span="4"><p>座位号: </p></el-col>
+                        <el-col :span="10">
+                            <el-input v-model="addinguser.seatNumber" placeholder="请输入账号"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>比赛编号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.contestId" placeholder="请输入账号"></el-input>
@@ -181,7 +195,8 @@
             department:'计算机科学技术学院',
             username:'',
             password:'',
-            contestId:''
+            contestId:'',
+            seatNumber:'',
         },
         deletingUser:{
             id:null,
@@ -194,7 +209,8 @@
             username:'',
             password:'',
             haveQueried:false,
-            contestId:''
+            contestId:'',
+            seatNumber:'',
         }
     };
 export default {
@@ -208,9 +224,8 @@ export default {
             console.log(res.body.status);
             if(res.body.status===200){
                 this.contestlist = res.body.contestlist;
-                this.$message("获取比赛成功");
             }else {
-                this.$message("获取比赛失败,请重新登录");
+                this.$message("获取用户失败,请重新登录");
             }
         },function(res){
             console.log(res.status);
@@ -231,6 +246,7 @@ export default {
                 username:row.username,
                 password:row.password,
                 contestId:row.contestId,
+                seatNumber:row.seatNumber
             }
             
         },
@@ -301,6 +317,7 @@ export default {
 
         },
         adduser(){
+            //ajax后台添加用户
             var data = {user:this.addinguser,token:this.$store.state.token};
             var _this = this;
             this.$http.post('http://127.0.0.1:3000/api/addUser',data,{emulateJSON:true}).then(function(res){
@@ -311,6 +328,7 @@ export default {
                             console.log(_this.addinguser.contestId);
                             if(_this.contestlist[i].id==_this.addinguser.contestId){
                                 console.log(333);
+                                //这里可以用循环代替,懒得改
                                 var newUser = {
                                     name:_this.addinguser.name,
                                     sex:_this.addinguser.sex,
@@ -320,6 +338,7 @@ export default {
                                     password:_this.addinguser.password,
                                     haveQueried:_this.addinguser.haveQueried,
                                     contestId:_this.addinguser.contestId,
+                                    seatNumber:_this.addinguser.seatNumber,
                                     id:res.body.id
                                 }
                                 _this.contestlist[i].userlist.push(newUser);
