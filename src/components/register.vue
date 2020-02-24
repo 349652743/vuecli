@@ -11,7 +11,7 @@
     <el-main>
     <el-row type="flex" class="row-bg " justify="center">
         <el-col :span="20">
-            <hr style="border:1px dashed #0000fff"/>
+            <el-divider></el-divider>
         </el-col>
     </el-row>
     <el-row type="flex" class="row-bg " justify="center">
@@ -65,7 +65,7 @@
     <br>
     <el-row type="flex" class="row-bg " justify="center">
         <el-col :span="20">
-            <hr style="border:1px solid #0000fff"/>
+            <el-divider></el-divider>
         </el-col>
     </el-row>
     <br>
@@ -172,9 +172,11 @@ export default {
       this.$http.post('http://127.0.0.1:3000/api/queryUser',data,{emulateJSON:true}).then(function(res){
         console.log(res.body.status);
         if(res.body.status===200){
-            this.$alert(`账号:${res.body.user.username}密码${res.body.user.password}`, '请谨慎保存账号密码', {
+            this.$alert(`账号:${res.body.user.username} 密码:${res.body.user.password} 座位号:${res.body.user.seatNumber}`, '请谨慎保存账号密码', {
             confirmButtonText: '确定'
           });
+        }else {
+          this.$message.error(res.body.message);
         }
       },function(res){
           console.log(res.status);

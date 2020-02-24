@@ -55,12 +55,13 @@ export default {
       var _this = this;
       
       this.$http.post('http://127.0.0.1:3000/api/login',data,{emulateJSON:true}).then(function(res){
-                    _this.$store.commit('setToken',res.body.token);
-                },function(res){
-                  console.log(res.status);
-                });
-      this.$message({message:"登陆成功",type:'success'});
-      this.$router.push({path:'/contest'});
+          _this.$store.commit('setToken',res.body.token);
+          _this.$message({message:"登陆成功",type:'success'});
+          _this.$router.push({path:'/contest'});
+      },function(res){
+        console.log(res.status);
+      });
+      
     }
   }
 }

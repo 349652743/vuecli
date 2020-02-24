@@ -2,24 +2,29 @@
 
     <el-container>
         <el-main>
+            <el-alert
+                title="只要超过比赛注册结束时间用户就不可注册，如需推迟注册时间请修改比赛注册结束时间"
+                type="warning">
+            </el-alert>
+            <br>
             <el-button type="primary" @click="addDialogVisible=true">添加比赛</el-button>
             
             <el-table  :data="contestlist" style="width: 100%">
                 <el-table-column prop="id" label="编号" width="180" header-align="center" align="center">
                 </el-table-column>
-                <el-table-column  label="名称" width="180" header-align="center" align="center">
+                <el-table-column  label="名称"  header-align="center" align="center">
                     <template slot-scope="scope">
                         <router-link :to="{ path: '/register', query: { id:scope.row.id ,contestName:scope.row.contestName}}">{{scope.row.contestName}}</router-link>
                     </template>
                 </el-table-column>
                 <el-table-column prop="endTime" label="注册结束时间" header-align="center" align="center">
                 </el-table-column>
-                <el-table-column label="开放查询状态" width="180" header-align="center" align="center">
+                <el-table-column label="查询/注册"  header-align="center" align="center">
                     <template slot-scope="scope">
                         <el-switch
                         v-model="scope.row.openRegister"
                         active-color="#13ce66"
-                        inactive-color="#ff4949"
+                        inactive-color="#409EFF"
                         @change="editStatus(scope.row)"
                         >
                         </el-switch>
@@ -53,8 +58,9 @@
                                 v-model="editingContest.endTime"
                                 type="datetime"
                                 placeholder="选择日期时间"
-                                value-format="yyyy-MM-dd HH:mm:ss">
-
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                style="width:100%;">
+                                
                             </el-date-picker>
                         </el-col>
                     </el-row>
@@ -76,7 +82,7 @@
                 </span>
                 </el-dialog>
                 <!-- 添加比赛对话框 -->
-                <el-dialog title="比赛添加" :visible.sync="addDialogVisible" width="80%">
+                <el-dialog title="比赛添加" :visible.sync="addDialogVisible" width="40%">
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>比赛名称: </p></el-col>
                         <el-col :span="10">
@@ -92,6 +98,7 @@
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 value-format="yyyy-MM-dd HH:mm:ss"
+                                style="width:100%;"
                                 >
                             </el-date-picker>
                         </el-col>

@@ -3,7 +3,7 @@
     <el-container>
         <el-aside width="150px">
             <el-menu
-            default-active="2"
+            default-active="0"
             class="el-menu-vertical-demo"
             v-for="(contest,index) of contestlist"
             :key="index"
@@ -15,11 +15,11 @@
         </el-aside>
         <el-main>
             <el-button type="primary" @click="addDialogVisible=true">添加用户</el-button>
-            
+            <el-button type="warning" @click="allocateDialogVisible=true">分配账号</el-button>
             <el-table  :data="contestlist[tmpcontest].userlist" style="width: 100%">
-                <el-table-column prop="id" label="编号" width="180" header-align="center" align="center">
+                <el-table-column prop="id" label="编号"  header-align="center" align="center">
                 </el-table-column>
-                <el-table-column prop="name" label="姓名" width="180" header-align="center" align="center">
+                <el-table-column prop="name" label="姓名"  header-align="center" align="center">
                 </el-table-column>
                 <el-table-column prop="studentId" label="学号" header-align="center" align="center">
                 </el-table-column>
@@ -33,7 +33,7 @@
                 </el-table-column>
                 <el-table-column prop="seatNumber" label="座位号" header-align="center" align="center">
                 </el-table-column>
-                <el-table-column label="已查询" width="180" header-align="center" align="center">
+                <el-table-column label="已查询"  header-align="center" align="center">
                     <template slot-scope="scope">
                         <el-switch
                         v-model="scope.row.haveQueried"
@@ -172,8 +172,41 @@
                         <el-button type="primary" @click="adduser">确 定</el-button>
                     </div>
                 </el-dialog>
+                <!-- 分配账号对话框 -->
+                <el-dialog
+                title="提示"
+                :visible.sync="allocateDialogVisible"
+                width="30%">
+                <el-row>
+                    <el-alert
+                        title="请合理安排教室数量，即教室座位数应大于当前比赛报名人数"
+                        type="warning">
+                    </el-alert>
+                </el-row>
+                <el-row>
+                    <br>
+                </el-row>
+                <el-row>
+                    <el-input
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请输入教室信息JSON"
+                    v-model="classroomlist">
+                    </el-input>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-row type="flex" :gutter="20" justify="center" >
+                        <el-col :span='8'>
+                        <el-button @click="allocateDialogVisible = false" style="width: 100%">取 消</el-button>
+                        </el-col>
+                        <el-col :span='8'>
+                        <el-button type="primary" @click="allocateAccount" style="width: 100%">提交</el-button>
+                        </el-col>
+                    </el-row>
+                </span>
+                </el-dialog>
         </el-main>
-        
+
     </el-container>
 
     
@@ -186,6 +219,7 @@
         addDialogVisible:false,
         editDialogVisible:false,
         deleteDialogVisible:false,
+        allocateDialogVisible:false,
         tmpcontest:0,
         editingUser:{
             id:1,
@@ -211,7 +245,18 @@
             haveQueried:false,
             contestId:'',
             seatNumber:'',
+        },
+        classroomlist:JSON.stringify([{
+            id:410,
+            rows:10,
+            columns:8
+        },
+        {
+            id:411,
+            rows:10,
+            columns:8
         }
+        ]),
     };
 export default {
     name: 'user',
@@ -351,7 +396,86 @@ export default {
                 });
             this.addDialogVisible = false;
 
+        },
+        allocateAccount(){//分配账号
+            //读取教室信息
+            var _this = this;
+            try{
+                var classroomlist = JSON.parse(this.classroomlist);
+                this.$confirm('此操作将导致已查询的用户信息失效，请确认是否分配账号', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(function(){
+                    //前端修改信息
+                    var seatMp = {};
+                    var numMp = {};
+                    for(var i=0;i< _this.contestlist[_this.tmpcontest].userlist.length;i++){
+                        var seatNumber = '';
+                        do{//随机生成座位号
+                        var classroom = _this.randomNum(0,classroomlist.length-1);
+                        var row = _this.randomNum(1,classroomlist[classroom].rows);
+                        var column = _this.randomNum(1,classroomlist[classroom].columns)
+                        seatNumber = String(classroomlist[classroom].id)+'-'+String(row)+'-'+String.fromCharCode(64+column);
+                        }while(seatMp[seatNumber]===1)
+                        _this.contestlist[_this.tmpcontest].userlist[i].seatNumber = seatNumber;
+                        seatMp[seatNumber] = 1;
+                        
+                        var teamNumber = '';
+                        do{//随机生成账号
+                            teamNumber = _this.randomNum(0,_this.contestlist[_this.tmpcontest].userlist.length-1);
+                            teamNumber = 'Team'+('000000000'+teamNumber).slice(-4);
+                        }while(numMp[teamNumber]===1)
+                        _this.contestlist[_this.tmpcontest].userlist[i].username = teamNumber;
+                        numMp[teamNumber] = 1;
+
+                        //随机生成密码
+                        var charList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+                        var password = '';
+                        for(var j=0;j<6;j++){
+                            password += charList[_this.randomNum(0,61)];
+                        }
+                        _this.contestlist[_this.tmpcontest].userlist[i].password = password;
+                    }
+                    //ajax后台修改信息
+                    var data = {userlist:_this.contestlist[_this.tmpcontest].userlist,token:_this.$store.state.token};
+                    _this.$http.post('http://127.0.0.1:3000/api/allocateAccount',data,{emulateJSON:true}).then(function(res){
+                        if(res.body.status===200){
+                            this.allocateDialogVisible = false;
+                            this.$message({
+                                type: 'success',
+                                message: res.body.message
+                            });
+                        }else {
+                            this.$message(res.body.message);
+                        }
+                    },function(res){
+                        console.log(res.status);
+                    });
+                    
+                }).catch(() => {
+                this.allocateDialogVisible = false;    
+                });
+            }catch(error){
+                this.$$message.error("请输入正确的教室信息JSON")
+            }
+
+            
+        } ,
+        randomNum(minNum,maxNum){//函数功能：生成 [n,m] 的随机整数。
+            switch(arguments.length){ 
+                case 1:{
+                    return parseInt(Math.random()*minNum+1,10); 
+                }
+                case 2:{
+                    return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+                }
+                default:{
+                    return 0;
+                }
+            }
         }
+        
 
     }
 }
