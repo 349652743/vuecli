@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
-import ElementUI from 'element-ui';
 import store from './stores/store.js'
 import router from './routers/router.js'
-import 'element-ui/lib/theme-chalk/index.css';
 import VueResource from 'vue-resource'
+import elementui from 'element-ui'
+import antd from 'antd'
 
-
+Vue.use(antd);
+Vue.use(elementui);
 Vue.use(VueResource);
-Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => { //路由拦截

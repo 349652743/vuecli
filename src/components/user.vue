@@ -65,36 +65,42 @@
                             <el-input v-model="editingUser.name" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>学号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="editingUser.studentId" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>性别: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="editingUser.sex" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>学院: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="editingUser.department" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>账号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="editingUser.username" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>密码: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="editingUser.password" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>座位号: </p></el-col>
                         <el-col :span="10">
@@ -126,46 +132,46 @@
                             <el-input v-model="addinguser.name" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>学号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.studentId" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>性别: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.sex" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>学院: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.department" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>账号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.username" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>密码: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.password" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
+                    <br>
                     <el-row type="flex" class="row-bg" >
                         <el-col :span="4"><p>座位号: </p></el-col>
                         <el-col :span="10">
                             <el-input v-model="addinguser.seatNumber" placeholder="请输入账号"></el-input>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg" >
-                        <el-col :span="4"><p>比赛编号: </p></el-col>
-                        <el-col :span="10">
-                            <el-input v-model="addinguser.contestId" placeholder="请输入账号"></el-input>
                         </el-col>
                     </el-row>
                     <div slot="footer" class="dialog-footer">
@@ -217,7 +223,6 @@
         contestlist:[{
             userlist:[]
         }],
-        url:'http://127.0.0.1:3000',
         addDialogVisible:false,
         editDialogVisible:false,
         deleteDialogVisible:false,
@@ -267,7 +272,7 @@ export default {
     },
     mounted(){
         var data = {token:this.$store.state.token};
-        this.$http.post(this.url+'/api/getUser',data,{emulateJSON:true}).then(function(res){
+        this.$http.post(this.$store.state.url+'/api/getUser',data,{emulateJSON:true}).then(function(res){
             console.log(res.body.status);
             if(res.body.status===200){
                 this.contestlist = res.body.contestlist;
@@ -301,7 +306,7 @@ export default {
             //ajax //后台修改用户
             var data = {user:this.editingUser,token:this.$store.state.token};
             var _this = this;
-            this.$http.post(this.url+'/api/editUser',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.$store.state.url+'/api/editUser',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -336,7 +341,7 @@ export default {
             //ajax 后台删除用户
             console.log(this.deletingUser);
             var data = {user:this.deletingUser,token:this.$store.state.token};
-            this.$http.post(this.url+'/api/deleteUser',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.$store.state.url+'/api/deleteUser',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("删除成功");
@@ -351,7 +356,7 @@ export default {
         editstatus(row){
             //ajax 后台修改用户状态
             var data = {user:{id:row.id,haveQueried:row.haveQueried},token:this.$store.state.token};
-            this.$http.post(this.url+'/api/editUserStatus',data,{emulateJSON:true}).then(function(res){
+            this.$http.post(this.$store.state.url+'/api/editUserStatus',data,{emulateJSON:true}).then(function(res){
                 console.log(res.body.status);
                 if(res.body.status===200){
                     this.$message("修改成功");
@@ -365,16 +370,16 @@ export default {
         },
         adduser(){
             //ajax后台添加用户
+            this.addinguser.contestId = this.contestlist[this.tmpcontest].id;
             var data = {user:this.addinguser,token:this.$store.state.token};
             var _this = this;
-            this.$http.post(this.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
-                     console.log(res.body.status);
+            this.$http.post(this.$store.state.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
+                    //  console.log(res.body.status);
                     if(res.body.status===200){
                         for(var i=0;i<_this.contestlist.length;i++){
-                            console.log(_this.contestlist[i].id);
-                            console.log(_this.addinguser.contestId);
+                            // console.log(_this.contestlist[i].id);
+                            // console.log(_this.addinguser.contestId);
                             if(_this.contestlist[i].id==_this.addinguser.contestId){
-                                console.log(333);
                                 //这里可以用循环代替,懒得改
                                 var newUser = {
                                     name:_this.addinguser.name,
@@ -400,11 +405,19 @@ export default {
 
         },
         allocateAccount(){//分配账号
-            //读取教室信息
             var _this = this;
             try{
                 var classroomlist = JSON.parse(this.classroomlist);
-                this.$confirm('此操作将导致已查询的用户信息失效，请确认是否分配账号', '提示', {
+                //判断教室数量够不够
+                var count = 0;
+                for(var item of classroomlist){
+                    count += item.rows*item.columns;
+                }
+                 _this.$message({message:`当前总座位数:${count} 报名总人数:${_this.contestlist[_this.tmpcontest].userlist.length}`,type:"warning"});
+                if(count<_this.contestlist[_this.tmpcontest].userlist.length){
+                    throw "教室数量不足，请添加教室";
+                }
+                _this.$confirm('此操作将导致已查询的用户信息失效，请确认是否分配账号', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -441,7 +454,7 @@ export default {
                     }
                     //ajax后台修改信息
                     var data = {userlist:_this.contestlist[_this.tmpcontest].userlist,token:_this.$store.state.token};
-                    _this.$http.post(_this.url+'/api/allocateAccount',data,{emulateJSON:true}).then(function(res){
+                    _this.$http.post(_this.$store.state.url+'/api/allocateAccount',data,{emulateJSON:true}).then(function(res){
                         if(res.body.status===200){
                             this.allocateDialogVisible = false;
                             this.$message({
@@ -454,12 +467,12 @@ export default {
                     },function(res){
                         console.log(res.status);
                     });
-                    
+                    this.allocateDialogVisible = false;    
                 }).catch(() => {
                 this.allocateDialogVisible = false;    
                 });
             }catch(error){
-                this.$$message.error("请输入正确的教室信息JSON")
+                this.$message.error(error)
             }
 
             

@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-      token:''
+      token:'',
+      url:"http://127.0.0.1:3000"
     },
     mutations: {
       setToken (state,payload) {

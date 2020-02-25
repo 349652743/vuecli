@@ -38,7 +38,6 @@ export default {
   name: 'HelloWorld',
   data(){
     return {
-      url:'http://127.0.0.1:3000',
       username:'',
       password:''
     }
@@ -54,14 +53,24 @@ export default {
         password:this.password
       }
       var _this = this;
-      
-      this.$http.post(this.url+'/api/login',data,{emulateJSON:true}).then(function(res){
-          _this.$store.commit('setToken',res.body.token);
+      var token = '';
+      this.$http.post(this.$store.state.url+'/api/login',data,{emulateJSON:true}).then(function(res){
+        token = res.body.token;
+        _this.$store.commit('setToken',token);
+        console.log(token);
+        if(token){
           _this.$message({message:"登陆成功",type:'success'});
           _this.$router.push({path:'/contest'});
+        }else{
+          _this.$message.error("账号密码错误");
+        }
       },function(res){
         console.log(res.status);
+        _this.$message.error("网络错误");
       });
+      
+     
+      
       
     }
   }

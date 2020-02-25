@@ -1,88 +1,78 @@
 <template>
-  <el-container>
-    <el-header>
-        <el-row type="flex" class="row-bg " justify="center">
-         
-        <h1>{{this.$route.query.contestName}}<small>报名页面</small></h1>
-        
-        </el-row>
-    </el-header>
+  <a-layout>
     <br>
-    <el-main>
-    <el-row type="flex" class="row-bg " justify="center">
-        <el-col :span="20">
-            <el-divider></el-divider>
-        </el-col>
-    </el-row>
-    <el-row type="flex" class="row-bg " justify="center">
-        <el-col :span="20">
-            <el-alert
-                title="Warning"
-                type="warning"
-                description="请保证所填信息准确，信息错误者将没有参赛资格"
-                show-icon>
-            </el-alert>
-        </el-col>
-    </el-row>
+    <a-layout-content style=" min-height: 600px;">
+    <a-row type="flex" class="row-bg " justify="center">
+      <h1>{{this.$route.query.contestName}}<small>报名页面</small></h1>
+    </a-row>
+    <a-row type="flex" class="row-bg " justify="center">
+      <a-col span="20">
+        <a-divider ></a-divider>
+      </a-col>
+    </a-row>
+    <a-row type="flex" class="row-bg " justify="center">
+      <a-col :span="20">
+        <a-alert
+          message="Warning"
+          description="请保证所填信息准确，信息错误者将没有参赛资格"
+          banner
+          type="warning"
+          showIcon
+          size="large"
+          />
+      </a-col>
+    </a-row>
     <br>
     <!-- 表单 -->
-    <el-row type="flex" class="row-bg" justify="center" :gutter="20">
-      <el-col :span="6">
+    <a-row type="flex" class="row-bg" justify="center" :gutter ="20">
+      <a-col :span="10" >
           <label>学号：</label>
-          <el-input v-model="user.studentId" placeholder="请输入账号"></el-input>
-      </el-col>
-      <el-col :span="6">
+          <a-input v-model="user.studentId" placeholder="请输入学号" style="width:100%;" size="large"></a-input>
+      </a-col>
+      <a-col :span="10" >
           <label>姓名：</label>
-          <el-input v-model="user.name" placeholder="请输入账号"></el-input>
-      </el-col>
-      <el-col :span="6">
-          <label>性别：</label>
-          <el-select v-model="user.sex" placeholder="请选择" style="width:100%;">
-              <el-option
-              v-for="item in sexOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-              </el-option>
-          </el-select>
-      </el-col>
-    </el-row>
+          <a-input v-model="user.name" placeholder="请输入姓名" style="width:100%;" size="large"></a-input>
+      </a-col>
+      
+    </a-row>
     <br>
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="18">
+    <a-row type="flex" class="row-bg" justify="center" :gutter="20">
+      <a-col :span="10" >
+          <label>性别：</label>
+          <a-select defaultValue="" @change="sexChange" style="width:100%" size="large">
+            <a-select-option value="男">男</a-select-option>
+            <a-select-option value="女">女</a-select-option>
+          </a-select>
+      </a-col>
+      <a-col :span="10">
         <label>学院：</label>
-        <el-select v-model="user.department" placeholder="请选择" style="width:100%;">
-                <el-option
-                v-for="item in departmentOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-      </el-col>
-    </el-row>
+        <a-select defaultValue="" style="width:100%" @change="departmentChange" size="large">
+          <a-select-option v-for="item of departmentlist" :key="item">{{item}}</a-select-option>
+          <a-select-option value="disabled" disabled>如果没有你的学院请联系管理员</a-select-option>
+        </a-select>
+      </a-col>
+    </a-row>
 
     <br>
-    <el-row type="flex" class="row-bg " justify="center">
-        <el-col :span="20">
-            <el-divider></el-divider>
-        </el-col>
-    </el-row>
+    <a-row type="flex" class="row-bg " justify="center">
+        <a-col :span="20">
+             <a-divider ></a-divider>
+        </a-col>
+    </a-row>
     <br>
-    <el-row type="flex" class="row-bg" justify="space-around" :gutter="40">
-      <el-col :span="4">
-        <el-button type="primary" @click="submit" style="width:100%;" v-show="!openquery">提交</el-button>
-        <el-button type="primary" @click="query" style="width:100%;" v-show="openquery">查询</el-button>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="warning" @click="dialogVisible = true" style="width:100%;">Tips</el-button>
-      </el-col>
-    </el-row>
-    <el-dialog
+    <a-row type="flex" class="row-bg" justify="space-around" :gutter="20" >
+      <a-col :span='7'>
+        <a-button type="primary" @click="submit"  v-show="!openquery" style="width:100%" size="large">提交</a-button>
+        <a-button type="primary" @click="query"  v-show="openquery" style="width:100%" size="large">查询</a-button>
+      </a-col>
+      <a-col :span='7'>
+        <a-button type="warning" @click="dialogVisible = true" style="width:100%" size="large">Tips</a-button>
+      </a-col>
+    </a-row>
+    <a-modal
     title="比赛环境"
-    :visible.sync="dialogVisible"
-    width="30%"
-    :before-close="handleClose">
+    :visible="dialogVisible"
+    width="80%">
     <span>
     <!--p>语言：C C++ Java Python Javascript Scheme</p-->
         <p>语言： C C++ Java Python2/3 JavaScript Kotlin Scala</p>
@@ -95,11 +85,11 @@
         <p>Scala环境：Scala 2.13.0</p>
     </span>
     <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <a-button type="primary" @click="dialogVisible = false">确 定</a-button>
     </span>
-    </el-dialog>
-    </el-main>
-  </el-container>
+    </a-modal>
+    </a-layout-content>
+  </a-layout>
 </template>
 
 <script>
@@ -107,21 +97,6 @@ export default {
   name: 'register',
   data(){
     return {
-      url:'http://127.0.0.1:3000',
-      sexOptions: [{
-        value: '男',
-        label: '男'
-      }, {
-        value: '女',
-        label: '女'
-      }],
-      departmentOptions: [{
-        value: '计算机科学技术学院',
-        label: '计算机科学技术学院'
-      }, {
-        value: '人工智能学院',
-        label: '人工智能学院'
-      }],
       user:{
           name:'',
           sex:'',
@@ -132,6 +107,7 @@ export default {
           haveQueried:true,
           contestId:this.$route.query.id
       },
+      departmentlist:["理学院","光电工程学院","机电工程学院","电子信息工程学院","计算机科学技术学院","材料科学与工程学院","化学与环境工程学院","生命科学学院","经济管理学院外语学院","文学院法学院","马克思主义学院","应用技术学院","东北师范大学","长春工业大学"],
       dialogVisible:false,
       openquery:true,
     }
@@ -139,7 +115,7 @@ export default {
   mounted(){
     var data = {contest:this.user};
     var _this = this;
-    this.$http.post(this.url+'/api/queryContest',data,{emulateJSON:true}).then(function(res){
+    this.$http.post(this.$store.state.url+'/api/queryContest',data,{emulateJSON:true}).then(function(res){
       console.log(res.body.status);
       if(res.body.status===200){
         if(res.body.contest.openRegister==true){
@@ -151,11 +127,12 @@ export default {
     });
   },
   methods:{
-    submit:function(){
+    submit(){
     //ajax 注册用户
+      console.log(this.user);
       if(this.user.name!=''&&this.user.sex!=''&&this.user.department!=''&&this.user.studentId!=''){//表单验证
         var data = {user:this.user};
-        this.$http.post(this.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
+        this.$http.post(this.$store.state.url+'/api/addUser',data,{emulateJSON:true}).then(function(res){
           console.log(res.body.status);
           if(res.body.status===200){
             this.$message({message:"注册成功",type:'success'});
@@ -167,10 +144,10 @@ export default {
         });
       }else this.$message({message:"请填写完整信息",type:'warning'});
     },
-    query:function(){
+    query(){
       //ajax 查询用户
       var data = {user:this.user};
-      this.$http.post(this.url+'/api/queryUser',data,{emulateJSON:true}).then(function(res){
+      this.$http.post(this.$store.state.url+'/api/queryUser',data,{emulateJSON:true}).then(function(res){
         console.log(res.body.status);
         if(res.body.status===200){
             this.$alert(`账号:${res.body.user.username} 密码:${res.body.user.password} 座位号:${res.body.user.seatNumber}`, '请谨慎保存账号密码', {
@@ -182,12 +159,18 @@ export default {
       },function(res){
           console.log(res.status);
       });
+    },
+    sexChange(value){
+      this.user.sex = value;
+    },
+    departmentChange(value){
+      this.user.department = value;
     }
   }
 }
 </script>
 <style type="text/css">
-h1 {font-size:40px;}
+h1 {font-size:35px;}
 h2 {font-size:40px;}
 p {font-size:14px;}
 </style>
