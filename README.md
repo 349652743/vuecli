@@ -5,4 +5,4 @@
 
 用户界面可根据比赛状态改为查询用户账号密码或注册比赛
 
-后端项目源码：https://github.com/349652743/koa2
+后端项目源码：https://github.com/349652743/Koa2-generator
